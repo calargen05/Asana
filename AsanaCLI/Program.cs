@@ -22,7 +22,8 @@ namespace Asana.CLI
                 // reads input from the user        
                 if (int.TryParse(Console.ReadLine() ?? "2", out choice_int))
                 {
-
+                    // formatting
+                    Console.Write("\n");
                     // switch statement to determine what to do with the input
                     switch (choice_int)
                     {
@@ -59,6 +60,7 @@ namespace Asana.CLI
                             deleteToDo(projects);
                             break;
                         case 3:
+                            updateTodo(projects);
                             break;
                         case 4:
                             listToDo(projects);
@@ -68,8 +70,10 @@ namespace Asana.CLI
                             projects.Add(newProject);
                             break;
                         case 6:
+                            deleteProject(projects);
                             break;
                         case 7:
+                            updateProject(projects);
                             break;
                         case 8:
                             listProject(projects);
@@ -134,7 +138,7 @@ namespace Asana.CLI
             Console.Write("ProjectId: ");
             // check if entered project id is valid
             var validProjectId = int.TryParse(Console.ReadLine(), out value);
-            while (!validProjectId)
+            while (!validProjectId || value < 1 || value > projects.Count)
             {
                 Console.Write("INVALID INPUT. Please enter a valid number: ");
                 validProjectId = int.TryParse(Console.ReadLine(), out value);
@@ -147,12 +151,6 @@ namespace Asana.CLI
                 {
                     todo.Id = project.ToDos.Count + 1;
                 }
-            }
-
-            while (todo.Id == null)
-            {
-                throw new Exception("That id does not correspond with any project. Please try again.");
-                
             }
 
             return todo;
@@ -228,13 +226,89 @@ namespace Asana.CLI
 
             // delete the ToDo
             project.ToDos.Remove(todoToDelete);
+            project.CompletePercent = calculatePercent(project);
             Console.WriteLine("Successfully Deleted");
         }
 
-        // needs to be written
         public static void updateTodo(List<Project> projects)
         {
+            // gets the id of the project
+            Console.Write("Enter the id of the project the todo is in: ");
+            var validid = int.TryParse(Console.ReadLine(), out int val);
+            while (!validid)
+            {
+                Console.Write("INVALID ID. Please enter a valid id: ");
+                validid = int.TryParse(Console.ReadLine(), out val);
+            }
 
+            // gets the project if it exists, else it returns to the main function due to user error
+            Project? project = projects.FirstOrDefault(p => p.Id == val);
+            if (project == null)
+            {
+                Console.WriteLine("There are no projects with the entered id. Returning to menu...");
+                return;
+            }
+
+            // gets the id of the ToDo
+            Console.Write("Enter the id of the todo you want to update: ");
+            var validToDoId = int.TryParse(Console.ReadLine(), out val);
+
+            while (!validToDoId)
+            {
+                Console.Write("INVALID ID. Please enter a valid id: ");
+                validToDoId = int.TryParse(Console.ReadLine(), out val);
+            }
+
+            // get the ToDo is it exists, else it returns to the main function due to user error
+            ToDo? todo = project.ToDos.FirstOrDefault(t => t.Id == val);
+            if (todo == null)
+            {
+                Console.WriteLine("There are no projects with the entered id. Returning to menu...");
+            }
+
+            int choice = -1;
+
+            while (choice != 3)
+            {
+                // menu to display the different things that can be updated
+                Console.WriteLine("Updating ToDo Menu:");
+                Console.WriteLine("0. Name");
+                Console.WriteLine("1. Description");
+                Console.WriteLine("2. Complete Status");
+                Console.WriteLine("3. Exit");
+
+                // input check
+                var validchoice = int.TryParse(Console.ReadLine(), out choice);
+                while (!validchoice)
+                {
+                    Console.Write("Enter a valid option: ");
+                    validchoice = int.TryParse(Console.ReadLine(), out choice);
+                }
+
+                switch(choice)
+                {
+                    case 0:
+                        Console.Write("Enter the new name: ");
+                        todo.Name = Console.ReadLine();
+                        Console.WriteLine("Successfully updated name.");
+                        break;
+                    case 1:
+                        Console.Write("Enter the new description: ");
+                        todo.Description = Console.ReadLine();
+                        Console.WriteLine("Successfully updated description");
+                        break;
+                    case 2:
+                        todo.IsComplete = !(todo.IsComplete ?? false);
+                        project.CompletePercent = calculatePercent(project);
+                        Console.WriteLine("Successfully updated complete status.");
+                        break;
+                    case 3:
+                        break;
+                    default:
+                        Console.WriteLine("UNKNOWN ERROR: please enter a value on the menu.");
+                        break;
+                }
+            }
         }
 
         public static void listToDo(List<Project> projects)
@@ -275,6 +349,18 @@ namespace Asana.CLI
             Console.WriteLine("Successfully Created Project.");
 
             return newProject;
+        }
+
+        // needs to be written
+        public static void deleteProject(List<Project> projects)
+        {
+
+        }
+
+        // needs to be written
+        public static void updateProject(List<Project> projects)
+        {
+
         }
 
         public static void listProject(List<Project> projects)
@@ -341,7 +427,7 @@ namespace Asana.CLI
                 }
             }
 
-            double result = num/project.ToDos.Count;
+            double result = ((double)num/(double)project.ToDos.Count) * 100;
             return result;
         }
     }
