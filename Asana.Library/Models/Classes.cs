@@ -18,9 +18,14 @@ namespace Asana.Library.Models
         public double? CompletePercent { get; set; }
 
         // List of ToDos
-        public List<ToDo> ToDos { get; set; }
+        public List<ToDo> ToDos = new List<ToDo>();
 
         public Project() { }
+
+        public override string ToString()
+        {
+            return $"Id: {Id}\nName: {Name}\nDescription: {Description}\nComplete Percent: {CompletePercent}\n\n";
+        }
 
     }
     public class ToDo
@@ -35,7 +40,7 @@ namespace Asana.Library.Models
         public ToDo() { }
         public override string ToString()
         {
-            return $"{Name} - {Description}";
+            return $"Id: {Id} - Name: {Name} - Priority: {Priority} - IsComplete: {IsComplete}\nDescription: {Description}";
         }
 
 

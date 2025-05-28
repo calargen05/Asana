@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Asana.Library.Models;
 
@@ -32,15 +33,16 @@ namespace Asana.CLI
                         case 1:
                             if (projects.Count > 0)
                             {
-                                var todo = createToDo();
+                                var todo = createToDo(projects);
                                 bool added = false;
                                 foreach (Project project in projects)
                                 {
                                     if (project.Id == todo.ProjectId)
                                     {
                                         project.ToDos.Add(todo);
+                                        project.CompletePercent = calculatePercent(project);
                                         added = true;
-                                        Console.WriteLine("Successfuly created ToDo.");
+                                        Console.WriteLine("Successfuly created ToDo.\n");
                                         break;
                                     }
                                 }
@@ -50,10 +52,30 @@ namespace Asana.CLI
                                 }
                             }
                             else
-                                Console.WriteLine("Please create a project before creating a ToDo.");
+                                Console.WriteLine("Please create a project before creating a ToDo.\n");
+
                             break;
                         case 2:
                             deleteToDo(projects);
+                            break;
+                        case 3:
+                            break;
+                        case 4:
+                            listToDo(projects);
+                            break;
+                        case 5:
+                            var newProject = createProject(projects);
+                            projects.Add(newProject);
+                            break;
+                        case 6:
+                            break;
+                        case 7:
+                            break;
+                        case 8:
+                            listProject(projects);
+                            break;
+                        case 9:
+                            listToDosInProject(projects);
                             break;
                         case 10:
                             break;
@@ -89,23 +111,14 @@ namespace Asana.CLI
             Console.WriteLine("**Projects MUST be created before ToDos can be created**");
             Console.WriteLine("Projects and ToDos must be created before being deleted");
             Console.WriteLine("There has to be a Project or a ToDo to update them");
+            Console.WriteLine("In order for a ToDo to be marked as complete, it has to be updated after it's created");
             Console.WriteLine("\nThere are checks for valid input, so that won't be an issue. Make sure to have some common sense when inputting values.\nOr don't I guess.\n\n");
         }
 
-        public static ToDo createToDo()
+        public static ToDo createToDo(List<Project> projects)
         {
             // new todo
             var todo = new ToDo();
-            // get id
-            Console.Write("Id: ");
-            // check if entered id is valid
-            var validId = int.TryParse(Console.ReadLine(), out int value);
-            while (!validId)
-            {
-                Console.Write("INVALID INPUT. Please enter a valid number: ");
-                validId = int.TryParse(Console.ReadLine(), out value);
-            }
-            todo.Id = value;
             // get name
             Console.Write("Name: ");
             todo.Name = Console.ReadLine();
@@ -114,25 +127,9 @@ namespace Asana.CLI
             todo.Description = Console.ReadLine();
             // get priority
             Console.Write("Priority: ");
-            var validPriority = int.TryParse(Console.ReadLine(), out value);
+            var validPriority = int.TryParse(Console.ReadLine(), out int value);
             // get completion status
-            Console.Write("IsComplete (Type 'yes' if complete or type 'no' if not complete): ");
-            // check for valid input
-            if (Console.ReadLine() == "yes")
-                todo.IsComplete = true;
-            else if (Console.ReadLine() == "no")
-                todo.IsComplete = false;
-            else
-            {
-                var validCompletion = "";
-                 while (validCompletion != "yes" && validCompletion != "no" )
-                {
-                    Console.Write("INVALID INPUT. please type 'yes' or 'no': ");
-                    validCompletion = Console.ReadLine();
-                }
-                 if (validCompletion == "yes") todo.IsComplete = true;
-                 else todo.IsComplete = false;
-            }
+            todo.IsComplete = false; 
             // get project id
             Console.Write("ProjectId: ");
             // check if entered project id is valid
@@ -143,6 +140,21 @@ namespace Asana.CLI
                 validProjectId = int.TryParse(Console.ReadLine(), out value);
             }
             todo.ProjectId = value;
+
+            foreach(var project in projects)
+            {
+                if (project.Id == todo.ProjectId)
+                {
+                    todo.Id = project.ToDos.Count + 1;
+                }
+            }
+
+            while (todo.Id == null)
+            {
+                throw new Exception("That id does not correspond with any project. Please try again.");
+                
+            }
+
             return todo;
         }
 
@@ -196,7 +208,7 @@ namespace Asana.CLI
 
             // getting the id of the ToDo in the project
             Console.WriteLine("Enter the id of the ToDo that you want to delete: ");
-            bool validToDoId = int.TryParse(Console.ReadLine(), out  todo_id);
+            bool validToDoId = int.TryParse(Console.ReadLine(), out todo_id);
 
             var ToDoExists = false;
             foreach (ToDo todo in project.ToDos)
@@ -218,6 +230,119 @@ namespace Asana.CLI
             project.ToDos.Remove(todoToDelete);
             Console.WriteLine("Successfully Deleted");
         }
+
+        // needs to be written
+        public static void updateTodo(List<Project> projects)
+        {
+
+        }
+
+        public static void listToDo(List<Project> projects)
+        {
+            if (projects.Any())
+            {
+                foreach (Project project in projects)
+                {
+                    if (project.ToDos.Any())
+                    {
+                        foreach (ToDo todo in project.ToDos)
+                        {
+                            Console.WriteLine($"ProjectId: {project.Id} - ToDo:: {todo}");
+                        }
+                    }
+                }
+            }
+            else
+                Console.WriteLine("There are no projects. Please make a project and add a ToDo to it if you wan to list the ToDos");
+        }
+
+        public static Project createProject(List<Project> projects)
+        {
+            // new project to be appended
+            Project newProject = new Project();
+
+            // get the id
+            newProject.Id = projects.Count + 1;
+
+            // get name and description
+            Console.Write("Name: ");
+            newProject.Name = Console.ReadLine();
+            Console.Write("Description: ");
+            newProject.Description = Console.ReadLine();
+
+            newProject.CompletePercent = 100.0;
+
+            Console.WriteLine("Successfully Created Project.");
+
+            return newProject;
+        }
+
+        public static void listProject(List<Project> projects)
+        {
+            if (projects.Any())
+            {
+                foreach (Project p in projects)
+                {
+                    Console.WriteLine(p);
+                }
+            }
+            else
+                Console.WriteLine("There are no projects to list.");
+        }
+
+        public static void listToDosInProject(List<Project> projects)
+        {
+            Console.Write("Enter the Id of the Project whose ToDos you want to list: ");
+            bool validId = int.TryParse(Console.ReadLine(), out int value);
+            // check for errors
+            while (!validId || value < 0)
+            {
+                Console.Write("INVALID INPUT. Please enter a valid id: ");
+                validId = int.TryParse(Console.ReadLine(), out value);
+            }
+
+            if (projects.Any())
+            {
+                foreach (Project p in projects)
+                {
+                    if (value == p.Id)
+                    {
+                        if (p.ToDos.Any())
+                        {
+                            foreach (ToDo t in p.ToDos)
+                            {
+                                Console.WriteLine(t);
+                            }
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("There are no ToDos in this project.");
+                        }
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("There are no projects with this id.");
+            }
+            
+        }
+
+        public static double calculatePercent(Project project)
+        {
+            int num = 0;
+            foreach (ToDo todo in project.ToDos)
+            {
+                if (todo.IsComplete == true)
+                {
+                    num++;
+                }
+            }
+
+            double result = num/project.ToDos.Count;
+            return result;
+        }
     }
 }
- 
