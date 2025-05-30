@@ -370,10 +370,54 @@ namespace Asana.CLI
             Console.WriteLine("Project successfully deleted");
         }
 
-        // needs to be written
         public static void updateProject(List<Project> projects)
         {
+            // get the id of the project
+            Console.Write("Enter the id of the project to update:  ");
 
+            // check the validity of the entered id
+            var validId = int.TryParse(Console.ReadLine(), out var id);
+            if (!validId || id < 0 || id > projects.Count)
+            {
+                Console.WriteLine("Invalid Entry. Please try again.");
+            }
+
+            // getting the project to update
+            var updatedProject = projects.FirstOrDefault(updated => updated.Id == id);
+
+            // while loop to get the facets of the project that the user wants to update
+            int choice = -1;
+            while (choice != 2)
+            {
+                Console.WriteLine("Update Project Menu:");
+                Console.WriteLine("0. Name");
+                Console.WriteLine("1. Description");
+                Console.WriteLine("2. Exit");
+
+                var validChoice = int.TryParse(Console.ReadLine(), out choice);
+                if (!validChoice || choice < 0 || choice > 2)
+                {
+                    Console.WriteLine("Invalid Entry. Please try again.");
+                }
+                else
+                {
+                    switch(choice)
+                    {
+                        case 0:
+                            Console.Write("Enter the new name: ");
+                            updatedProject.Name = Console.ReadLine();
+                            Console.WriteLine("Name successfully updated.");
+                            break;
+                        case 1:
+                            Console.Write("Enter the new description: ");
+                            updatedProject.Description = Console.ReadLine();
+                            Console.WriteLine("Description successfully updated");
+                            break;
+                        case 2:
+                            break;
+                    }
+                }
+            }
         }
 
         public static void listProject(List<Project> projects)
