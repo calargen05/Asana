@@ -351,10 +351,23 @@ namespace Asana.CLI
             return newProject;
         }
 
-        // needs to be written
         public static void deleteProject(List<Project> projects)
         {
+            // get the id of the project
+            Console.Write("Enter the id of the project: ");
 
+            // check the validity of the entered id
+            var validId = int.TryParse(Console.ReadLine(), out var id);
+            if (!validId || id < 0 || id > projects.Count)
+            {
+                Console.WriteLine("Invalid Entry. Please try again.");
+                return;
+            }
+
+            // getting the project to delete and then deleting it
+            var projectToDelete = projects.FirstOrDefault(project => project.Id == id);
+            projects.Remove(projectToDelete);
+            Console.WriteLine("Project successfully deleted");
         }
 
         // needs to be written
