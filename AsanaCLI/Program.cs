@@ -9,7 +9,7 @@ namespace Asana.CLI
     {
         public static void Main(string[] args)
         {
-            // List of ToDo class objects
+            // list of Project objects
             var projects = new List<Project>();
             // other variables
             int choice_int;
@@ -20,7 +20,7 @@ namespace Asana.CLI
                 Menu();
 
                 // reads input from the user        
-                if (int.TryParse(Console.ReadLine() ?? "2", out choice_int))
+                if (int.TryParse(Console.ReadLine() ?? "10", out choice_int))
                 {
                     // formatting
                     Console.Write("\n");
@@ -132,6 +132,12 @@ namespace Asana.CLI
             // get priority
             Console.Write("Priority: ");
             var validPriority = int.TryParse(Console.ReadLine(), out int value);
+            while (!validPriority)
+            {
+                Console.Write("INVALID INPUT. Please enter an integer: ");
+                validPriority = int.TryParse(Console.ReadLine(), out value);
+            }
+            todo.Priority = value;
             // get completion status
             todo.IsComplete = false; 
             // get project id
@@ -145,6 +151,7 @@ namespace Asana.CLI
             }
             todo.ProjectId = value;
 
+            // assigning id to todo
             foreach(var project in projects)
             {
                 if (project.Id == todo.ProjectId)
@@ -177,8 +184,8 @@ namespace Asana.CLI
             bool validId = int.TryParse(Console.ReadLine(), out proj_id);
             while (!validId)
             {
-                Console.WriteLine("INVALID INPUT. Plese try again: ");
-                validId = int.TryParse(Console.ReadLine(),out proj_id);
+                Console.WriteLine("INVALID INPUT. Please try again: ");
+                validId = int.TryParse(Console.ReadLine(), out proj_id);
             }
 
             var projectExists = false;
@@ -207,6 +214,11 @@ namespace Asana.CLI
             // getting the id of the ToDo in the project
             Console.WriteLine("Enter the id of the ToDo that you want to delete: ");
             bool validToDoId = int.TryParse(Console.ReadLine(), out todo_id);
+            while (!validToDoId)
+            {
+                Console.Write("INVALID INPUT. Please try again: ");
+                validToDoId = int.TryParse(Console.ReadLine(), out todo_id);
+            }
 
             var ToDoExists = false;
             foreach (ToDo todo in project.ToDos)
@@ -264,6 +276,7 @@ namespace Asana.CLI
             if (todo == null)
             {
                 Console.WriteLine("There are no projects with the entered id. Returning to menu...");
+                return;
             }
 
             int choice = -1;
@@ -327,7 +340,7 @@ namespace Asana.CLI
                 }
             }
             else
-                Console.WriteLine("There are no projects. Please make a project and add a ToDo to it if you wan to list the ToDos");
+                Console.WriteLine("There are no projects. Please make a project and add a ToDo to it if you want to list the ToDos");
         }
 
         public static Project createProject(List<Project> projects)
@@ -360,12 +373,16 @@ namespace Asana.CLI
             var validId = int.TryParse(Console.ReadLine(), out var id);
             if (!validId || id < 0 || id > projects.Count)
             {
-                Console.WriteLine("Invalid Entry. Please try again.");
+                Console.WriteLine("Invalid Entry. Returning to menu...");
                 return;
             }
 
             // getting the project to delete and then deleting it
             var projectToDelete = projects.FirstOrDefault(project => project.Id == id);
+            if (projectToDelete.ToDos.Any())
+            {
+                projectToDelete.ToDos.Clear();
+            }
             projects.Remove(projectToDelete);
             Console.WriteLine("Project successfully deleted");
         }
@@ -379,7 +396,8 @@ namespace Asana.CLI
             var validId = int.TryParse(Console.ReadLine(), out var id);
             if (!validId || id < 0 || id > projects.Count)
             {
-                Console.WriteLine("Invalid Entry. Please try again.");
+                Console.WriteLine("Invalid Entry. Returning to menu...");
+                return;
             }
 
             // getting the project to update
