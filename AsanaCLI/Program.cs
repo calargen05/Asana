@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Asana.Library.Models;
+using Asana.Library.Services;
 
 namespace Asana.CLI
 {
@@ -9,6 +10,7 @@ namespace Asana.CLI
     {
         public static void Main(string[] args)
         {
+            var toDoSvc = ToDoServiceProxy.Current;
             // list of Project objects
             var projects = new List<Project>();
             // other variables
