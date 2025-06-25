@@ -59,7 +59,7 @@ namespace Asana.Library.Services
             }
             else
             {
-                toDos.Where(t => (t != null) && !(t?.IsComplete ?? false))
+                toDos.Where(t => (t != null) && !(t?.IsComplete  ?? false))
                                 .ToList()
                                 .ForEach(Console.WriteLine);
             }
