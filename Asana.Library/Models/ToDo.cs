@@ -40,7 +40,7 @@ namespace Asana.Library.Models
         public ToDo() { }
         public override string ToString()
         {
-            return $"Id: {Id} - Name: {Name} - Priority: {Priority} - IsComplete: {IsComplete}\nDescription: {Description}";
+            return $"{Id} - {Name} - {Description}";
         }
 
 
