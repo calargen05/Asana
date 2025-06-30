@@ -8,4 +8,14 @@ public partial class MainPage : ContentPage
         InitializeComponent();
         BindingContext = new MainPageViewModel();
     }
+
+    private void AddNewClicked(object sender, EventArgs e)
+    {
+        Shell.Current.GoToAsync("//ToDoDetails");
+    }
+
+    private void ManageProjectsClicked(object sender, EventArgs e)
+    {
+        Shell.Current.GoToAsync("//ProjectPage");
+    }
 }

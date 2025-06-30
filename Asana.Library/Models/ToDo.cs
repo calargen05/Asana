@@ -10,24 +10,6 @@ using System.Threading.Tasks;
 
 namespace Asana.Library.Models
 {
-    public class Project
-    {
-        public int Id { get; set; }
-        public string? Name { get; set; }
-        public string? Description { get; set; }
-        public double? CompletePercent { get; set; }
-
-        // List of ToDos
-        public List<ToDo> ToDos = new List<ToDo>();
-
-        public Project() { }
-
-        public override string ToString()
-        {
-            return $"Id: {Id}\nName: {Name}\nDescription: {Description}\nComplete Percent: {CompletePercent}\n\n";
-        }
-
-    }
     public class ToDo
     {
         public string? Name { get; set; }
@@ -37,7 +19,28 @@ namespace Asana.Library.Models
         public int Id { get; set; }
         public int? ProjectId { get; set; }
 
-        public ToDo() { }
+        public ToDo()
+        {
+            Id = 0;
+            IsComplete = false;
+        }
+
+        public string PriorityDisplay
+        {
+            set
+            {
+                if (!int.TryParse(value, out int p))
+                {
+                    Priority = -9999;
+                }
+                else
+                {
+                    {
+                        Priority = p;
+                    }
+                }
+            }
+        }
         public override string ToString()
         {
             return $"{Id} - {Name} - {Description}";
