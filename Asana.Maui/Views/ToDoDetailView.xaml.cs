@@ -20,4 +20,14 @@ public partial class ToDoDetailView : ContentPage
 		(BindingContext as ToDoDetailViewModel)?.AddOrUpdateToDo();
         Shell.Current.GoToAsync("//MainPage");
     }
+
+    private void ContentPage_NavigatedFrom(object sender, NavigatedFromEventArgs e)
+    {
+
+    }
+
+    private void ContentPage_NavigatedTo(object sender, NavigatedToEventArgs e)
+    {
+
+    }
 }

@@ -18,4 +18,14 @@ public partial class MainPage : ContentPage
     {
         Shell.Current.GoToAsync("//ProjectPage");
     }
+
+    private void ContentPage_NavigatedFrom(object sender, NavigatedFromEventArgs e)
+    {
+        
+    }
+
+    private void ContentPage_NavigatedTo(object sender, NavigatedToEventArgs e)
+    {
+        (BindingContext as MainPageViewModel).RefreshPage();
+    }
 }
