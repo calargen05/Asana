@@ -13,7 +13,7 @@ namespace Asana.Maui.ViewModel
 {
     public class MainPageViewModel : INotifyPropertyChanged
     {
-        private ToDoServiceProxy _toDoSvc = ToDoServiceProxy.Current;
+        private ToDoServiceProxy _toDoSvc;
 
         public MainPageViewModel() 
         {
