@@ -20,6 +20,7 @@ namespace Asana.Maui.ViewModel
             _toDoSvc = ToDoServiceProxy.Current;
         }
 
+        public ToDo SelectedToDo { get; set; }
         public ObservableCollection<ToDo> ToDos
         {
             get
@@ -32,6 +33,8 @@ namespace Asana.Maui.ViewModel
                 return new ObservableCollection<ToDo>(toDos);
             }
         }
+
+        public int SelectedToDoId => SelectedToDo.Id;
 
         private bool isShowCompleted;
 
