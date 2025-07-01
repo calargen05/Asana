@@ -59,6 +59,7 @@
                 <VerticalStackLayout Grid.Row="2">
                     <Button Text="Add New ToDo" Clicked="AddNewClicked" Grid.Row="0"/>
                     <Button Text="Edit Selected ToDo" Clicked="EditClicked"/>
+                    <Button Text="Delete Selected ToDo" Clicked="DeleteClicked"/>
                     <Button Text="Manage Projects" Clicked="ManageProjectsClicked" Grid.Row="2"/>
                 </VerticalStackLayout>
             </Grid>
