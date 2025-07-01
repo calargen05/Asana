@@ -63,13 +63,14 @@ namespace Asana.Library.Services
                 return instance;
             }
         }
-        public void AddOrUpdate(ToDo? toDo)
+        public ToDo? AddOrUpdate(ToDo? toDo)
         {
             if (toDo != null && toDo.Id == 0)
             {
                 toDo.Id = nextKey;
                 _toDoList.Add(toDo);
             }
+            return toDo;
         }
 
         public void DisplayToDos(bool isShowCompleted = false)
