@@ -19,10 +19,14 @@ public partial class MainPage : ContentPage
         Shell.Current.GoToAsync("//ProjectPage");
     }
     private void EditClicked(object sender, EventArgs e)
-        {
+    {
         var selectedId = (BindingContext as MainPageViewModel)?.SelectedToDo.Id ?? 0;
             Shell.Current.GoToAsync($"//ToDoDetails?toDoId={selectedId}");
-        }
+    }
+    private void DeleteClicked(object sender, EventArgs e)
+    {
+        (BindingContext as MainPageViewModel)?.DeleteToDo();
+    }
     private void ContentPage_NavigatedFrom(object sender, NavigatedFromEventArgs e)
     {
         
