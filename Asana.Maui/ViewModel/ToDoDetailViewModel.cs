@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Asana.Library.Models;
 using Asana.Library.Services;
 
@@ -10,7 +11,7 @@ namespace Asana.Maui.ViewModel
 {
     public class ToDoDetailViewModel
     {
-        public ToDo? Model { get; set; }
+        
         public ToDoDetailViewModel()
         {
             Model = new ToDo();
@@ -19,8 +20,21 @@ namespace Asana.Maui.ViewModel
         public ToDoDetailViewModel(int id)
         {
             Model = ToDoServiceProxy.Current.GetById(id) ?? new ToDo();
+            DeleteCommand = new Command(DoDelete);
         }
 
+        public ToDoDetailViewModel(ToDo? model)
+        {
+            Model = model ?? new ToDo();
+            DeleteCommand = new Command(DoDelete);
+        } 
+
+        public void DoDelete()
+        {
+           ToDoServiceProxy.Current.DeleteToDo(Model);
+        }
+        public ToDo? Model { get; set; }
+        public ICommand? DeleteCommand { get; set; }
         public List<int> Priorities
         {
             get
