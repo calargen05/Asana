@@ -20,7 +20,7 @@ public partial class MainPage : ContentPage
     }
     private void EditClicked(object sender, EventArgs e)
     {
-        var selectedId = (BindingContext as MainPageViewModel)?.SelectedToDo.Id ?? 0;
+        var selectedId = (BindingContext as MainPageViewModel)?.SelectedToDoId ?? 0;
             Shell.Current.GoToAsync($"//ToDoDetails?toDoId={selectedId}");
     }
     private void DeleteClicked(object sender, EventArgs e)
@@ -37,5 +37,8 @@ public partial class MainPage : ContentPage
         (BindingContext as MainPageViewModel)?.RefreshPage();
     }
 
-    
+    private void InLineDeleteClicked(object sender, EventArgs e)
+    {
+        (BindingContext as MainPageViewModel)?.RefreshPage();
+    }
 }
