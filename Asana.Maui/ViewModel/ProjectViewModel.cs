@@ -10,10 +10,17 @@ namespace Asana.Maui.ViewModel
     public class ProjectViewModel
     {
         public Project? Model { get; set; }
+
         public ProjectViewModel()
         {
-            Model = new Project;
+            Model = new Project();
         }
+
+        public ProjectViewModel(Project? model)
+        {
+            Model = model;
+        }
+
         public override string ToString()
         {
             return $"{Model?.Id ?? -1} {Model?.Name}\n";
