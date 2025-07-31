@@ -62,7 +62,7 @@ namespace Asana.Maui.ViewModel
                 return;
             }
 
-            ToDoServiceProxy.Current.DeleteToDo(SelectedToDo.Model);
+            ToDoServiceProxy.Current.DeleteToDo(SelectedToDo?.Model?.Id ?? 0);
             NotifyPropertyChanged(nameof(ToDos));
         }
 
